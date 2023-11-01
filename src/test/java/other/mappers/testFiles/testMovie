@@ -1,0 +1,15 @@
+{
+    "Year of release": 2007,
+    "Authors": [
+        {
+            "Id": 2,
+            "firstName": "James",
+            "lastName": "Cameron",
+            "age": 44
+        }
+    ],
+    "Rental finish date": "2003-09-04",
+    "Id": 2,
+    "Rental start date": "2003-12-02",
+    "Name": "Avatar"
+}
