@@ -1,15 +1,16 @@
 package service;
 
+import com.application_task.app.db.connection.ConnectionPoolImpl;
 import com.application_task.app.db.dao.impl.AuthorDaoImpl;
 import com.application_task.app.entity.Author;
 import com.application_task.app.exception.DatabaseException;
 import com.application_task.app.service.AuthorService;
 import com.application_task.app.service.impl.AuthorServiceImpl;
-import com.application_task.app.util.Constants;
-import com.application_task.app.util.PropertiesLoader;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,15 +18,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Author service + dao test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AuthorServiceTest {
+public class AuthorServiceTest extends DatabaseConnector {
     private static AuthorService authorService;
     private static final AuthorDaoImpl authorDao = Mockito.mock(AuthorDaoImpl.class);
 
     @BeforeAll
-    static void init() {
+    static void init() throws SQLException, IOException {
+        postgres.start();
         authorService = new AuthorServiceImpl(
-                PropertiesLoader.getProperty(Constants.USER_PROPERTY_KEY),
-                PropertiesLoader.getProperty(Constants.PASSWORD_PROPERTY_KEY));
+                postgres.getUsername(),
+                postgres.getPassword(),
+                postgres.getJdbcUrl()
+        );
+
+        connectionPool = new ConnectionPoolImpl(postgres.getUsername(), postgres.getPassword(), postgres.getJdbcUrl());
+        fillPostgreDb();
+    }
+
+    @AfterAll
+    static void drop() {
+        postgres.stop();
     }
 
     @Test

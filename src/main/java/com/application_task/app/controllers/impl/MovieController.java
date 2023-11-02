@@ -29,6 +29,10 @@ public class MovieController extends WebController {
         this.movieService = new MovieServiceImpl(user, password);
     }
 
+    public MovieController(String user, String password, String databaseUrl) {
+        this.movieService = new MovieServiceImpl(user, password, databaseUrl);
+    }
+
     @Override
     public void execute(HttpExchange httpExchange) {
         String request = httpExchange.getRequestURI().getPath();

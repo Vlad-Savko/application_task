@@ -37,6 +37,12 @@ public class AuthorDaoImpl implements AuthorDao {
         connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    public AuthorDaoImpl(String user, String password, String databaseUrl) {
+        helper = new MovieDaoImplHelper(user, password, databaseUrl);
+        movieAuthorService = new MovieAuthorServiceImpl(user, password, databaseUrl);
+        connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
+    }
+
     @Override
     public long create(Author author) throws DatabaseException {
         String sqlCommandForGettingAuthor = Constants.Sql.Author.GET_AUTHOR.formatted(author.id());

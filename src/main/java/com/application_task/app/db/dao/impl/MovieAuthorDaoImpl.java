@@ -18,6 +18,10 @@ public class MovieAuthorDaoImpl implements MovieAuthorDao {
         connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    public MovieAuthorDaoImpl(String user, String password, String databaseUrl) {
+        connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
+    }
+
     @Override
     public void createByMovieId(long movieId, List<Long> authors) throws DatabaseException {
         modifyMovieAuthors(authors, Constants.Sql.MovieAuthors.INSERT, movieId);

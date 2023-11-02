@@ -13,6 +13,9 @@ public class RentalServiceImpl implements RentalService {
     public RentalServiceImpl(String user, String password) {
         this.dao = new RentalDaoImpl(user, password);
     }
+    public RentalServiceImpl(String user, String password, String databaseUrl) {
+        this.dao = new RentalDaoImpl(user, password, databaseUrl);
+    }
 
     @Override
     public long create(Rental rental) throws DatabaseException {

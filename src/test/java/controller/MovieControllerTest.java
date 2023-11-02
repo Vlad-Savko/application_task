@@ -1,10 +1,15 @@
 package controller;
 
-import com.application_task.app.controllers.factory.WebControllerFactory;
+import com.application_task.app.db.connection.ConnectionPoolImpl;
 import com.application_task.app.util.Constants;
 import com.application_task.app.web.Server;
 import controller.client.WebClient;
+import controller.wrappers.MovieControllerWrapper;
 import org.junit.jupiter.api.*;
+import service.DatabaseConnector;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.application_task.app.util.Constants.HttpMethod.*;
 import static org.junit.Assert.assertEquals;
@@ -13,22 +18,31 @@ import static org.junit.Assert.assertNull;
 
 @DisplayName("Test movie controller")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MovieControllerTest {
+public class MovieControllerTest extends DatabaseConnector {
     private static Server server;
     private static WebClient webClient;
 
     @BeforeAll
-    static void init() {
+    static void init() throws SQLException, IOException {
+        postgres.start();
         server = new Server.Builder()
                 .port(8081)
-                .controller(Constants.OfServer.MOVIE_CONTROLLER_CONTEXT_PATH, WebControllerFactory.create(WebControllerFactory.Type.MOVIE))
-                .controller(Constants.OfServer.AUTHOR_CONTROLLER_CONTEXT_PATH, WebControllerFactory.create(WebControllerFactory.Type.AUTHOR))
+                .controller(
+                        Constants.OfServer.MOVIE_CONTROLLER_CONTEXT_PATH,
+                        new MovieControllerWrapper(
+                                postgres.getUsername(),
+                                postgres.getPassword(),
+                                postgres.getJdbcUrl()
+                        )
+                )
                 .build();
+        connectionPool = new ConnectionPoolImpl(postgres.getUsername(), postgres.getPassword(), postgres.getJdbcUrl());
+        fillPostgreDb();
         server.start();
     }
 
     @Test
-    @DisplayName("Get all movies testAuthor(no movies in database)")
+    @DisplayName("Get all movies test(no movies in database)")
     @Order(1)
     public void getAllMoviesWithEmptyTableTest() {
         webClient = new WebClient.Builder()
@@ -43,7 +57,7 @@ public class MovieControllerTest {
 
 
     @Test
-    @DisplayName("Get all movies testAuthor")
+    @DisplayName("Get all movies test")
     @Order(5)
     public void getAllMoviesTest() {
         webClient = new WebClient.Builder()

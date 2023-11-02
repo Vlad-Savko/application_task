@@ -27,6 +27,11 @@ public class MovieDaoImplHelper extends AbstractDao {
         this.connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    public MovieDaoImplHelper(String user, String password, String databaseUrl) {
+        this.rentalService = new RentalServiceImpl(user, password, databaseUrl);
+        this.connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
+    }
+
     @SuppressWarnings("all")
     public void deleteMovie(long id) throws DatabaseException {
 

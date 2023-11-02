@@ -14,6 +14,10 @@ public class MovieAuthorServiceImpl implements MovieAuthorService {
         this.dao = new MovieAuthorDaoImpl(user, password);
     }
 
+    public MovieAuthorServiceImpl(String user, String password, String databaseUrl) {
+        this.dao = new MovieAuthorDaoImpl(user, password, databaseUrl);
+    }
+
     @Override
     public void bindMovieToAuthors(long movieId, List<Long> authorsIds) throws DatabaseException {
         dao.createByMovieId(movieId, authorsIds);

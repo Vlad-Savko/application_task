@@ -19,7 +19,9 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorServiceImpl(String user, String password) {
         this.dao = new AuthorDaoImpl(user, password);
     }
-
+    public AuthorServiceImpl(String user, String password, String databaseUrl) {
+        this.dao = new AuthorDaoImpl(user, password, databaseUrl);
+    }
     @Override
     public long create(Author author) throws DatabaseException {
         return dao.create(author);

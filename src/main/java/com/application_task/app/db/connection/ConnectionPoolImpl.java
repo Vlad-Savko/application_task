@@ -6,30 +6,23 @@ import com.application_task.app.util.PropertiesLoader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 public class ConnectionPoolImpl implements ConnectionPool {
-    private final Queue<Connection> connections;
     private String user;
     private String password;
-    private final int DEFAULT_POOL_SIZE = 10;
+    private String databaseUrl;
 
-    @Override
-    public Connection getConnection() {
-        return createConnection(this.user, this.password);
+    public ConnectionPoolImpl(String user, String password, String databaseUrl) {
+        initCredentials(user, password, databaseUrl);
     }
 
     public ConnectionPoolImpl(String user, String password) {
         initCredentials(user, password);
-
-        this.connections = new ArrayBlockingQueue<>(DEFAULT_POOL_SIZE);
     }
 
-    public ConnectionPoolImpl(String user, String password, int poolSize) {
-        initCredentials(user, password);
-
-        this.connections = new ArrayBlockingQueue<>(poolSize);
+    @Override
+    public Connection getConnection() {
+        return createConnection();
     }
 
     @Override
@@ -42,13 +35,13 @@ public class ConnectionPoolImpl implements ConnectionPool {
         return this.password;
     }
 
-    private Connection createConnection(String user, String password) {
+    private Connection createConnection() {
         try {
             Class.forName(Constants.Db.SQL_DRIVER);
             return DriverManager.getConnection(
-                    PropertiesLoader.getProperty(Constants.DB_URL_PROPERTY_KEY),
-                    user,
-                    password);
+                    this.databaseUrl,
+                    this.user,
+                    this.password);
         } catch (SQLException e) {
             throw new RuntimeException(Constants.Db.CONNECTION_ERROR, e);
         } catch (ClassNotFoundException e) {
@@ -56,8 +49,15 @@ public class ConnectionPoolImpl implements ConnectionPool {
         }
     }
 
+    private void initCredentials(String user, String password, String databaseUrl) {
+        this.user = user;
+        this.password = password;
+        this.databaseUrl = databaseUrl;
+    }
+
     private void initCredentials(String user, String password) {
         this.user = user;
         this.password = password;
+        this.databaseUrl = PropertiesLoader.getProperty(Constants.DB_URL_PROPERTY_KEY);
     }
 }

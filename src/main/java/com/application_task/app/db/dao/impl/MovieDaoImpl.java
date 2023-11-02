@@ -44,6 +44,13 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         this.connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    public MovieDaoImpl(String user, String password, String databaseUrl) {
+        this.rentalService = new RentalServiceImpl(user, password, databaseUrl);
+        this.authorService = new AuthorServiceImpl(user, password, databaseUrl);
+        this.movieAuthorService = new MovieAuthorServiceImpl(user, password, databaseUrl);
+        this.connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
+    }
+
     @Override
     public void create(Movie movie) throws DatabaseException {
         if (this.get(movie.id()).isEmpty()) {

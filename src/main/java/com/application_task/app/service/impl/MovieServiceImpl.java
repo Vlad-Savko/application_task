@@ -20,6 +20,10 @@ public class MovieServiceImpl implements MovieService {
         this.dao = new MovieDaoImpl(user, password);
     }
 
+    public MovieServiceImpl(String user, String password, String databaseUrl) {
+        this.dao = new MovieDaoImpl(user, password, databaseUrl);
+    }
+
     @Override
     public void create(Movie movie) throws DatabaseException {
         dao.create(movie);

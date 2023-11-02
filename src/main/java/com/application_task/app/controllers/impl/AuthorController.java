@@ -29,10 +29,9 @@ import static com.application_task.app.util.Constants.HttpMethod.*;
 import static com.application_task.app.util.StringParser.parseMovieFilters;
 
 public class AuthorController extends WebController {
-    private final AuthorService authorService;
-    private final static Logger LOGGER = Logger.getLogger(AuthorController.class.getName());
-    private final MovieService movieService;
-    private final MovieAuthorService movieAuthorService;
+    protected final AuthorService authorService;
+    protected final MovieService movieService;
+    protected final MovieAuthorService movieAuthorService;
 
     public AuthorController() {
         String user = PropertiesLoader.getProperty(Constants.USER_PROPERTY_KEY);
@@ -40,6 +39,12 @@ public class AuthorController extends WebController {
         authorService = new AuthorServiceImpl(user, password);
         movieAuthorService = new MovieAuthorServiceImpl(user, password);
         movieService = new MovieServiceImpl(user, password);
+    }
+
+    public AuthorController(String user, String password, String databaseUrl) {
+        authorService = new AuthorServiceImpl(user, password, databaseUrl);
+        movieAuthorService = new MovieAuthorServiceImpl(user, password, databaseUrl);
+        movieService = new MovieServiceImpl(user, password, databaseUrl);
     }
 
     @Override
@@ -52,7 +57,6 @@ public class AuthorController extends WebController {
                 if (requestString.isEmpty()) {
                     try {
                         List<AuthorDto> authors = authorService.getAll();
-                        LOGGER.log(Level.INFO, "got authors");
                         writeResponse(httpExchange, authors.stream(), Constants.HttpStatus.OK);
                     } catch (DatabaseException ex) {
                         errorResponse(httpExchange, ex.getMessage(), Constants.HttpStatus.NOT_FOUND);

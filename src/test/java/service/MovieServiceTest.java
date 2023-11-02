@@ -1,5 +1,6 @@
 package service;
 
+import com.application_task.app.db.connection.ConnectionPoolImpl;
 import com.application_task.app.db.dao.impl.MovieDaoImpl;
 import com.application_task.app.db.dto.MovieDto;
 import com.application_task.app.entity.Author;
@@ -8,11 +9,11 @@ import com.application_task.app.entity.Rental;
 import com.application_task.app.exception.DatabaseException;
 import com.application_task.app.service.MovieService;
 import com.application_task.app.service.impl.MovieServiceImpl;
-import com.application_task.app.util.Constants;
-import com.application_task.app.util.PropertiesLoader;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collections;
@@ -22,16 +23,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Movie service + dao test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MovieServiceTest {
+public class MovieServiceTest extends DatabaseConnector {
     private static MovieService movieService;
     private static final MovieDaoImpl movieDao = Mockito.mock(MovieDaoImpl.class);
 
-
     @BeforeAll
-    static void init() {
+    static void init() throws SQLException, IOException {
+        postgres.start();
         movieService = new MovieServiceImpl(
-                PropertiesLoader.getProperty(Constants.USER_PROPERTY_KEY),
-                PropertiesLoader.getProperty(Constants.PASSWORD_PROPERTY_KEY));
+                postgres.getUsername(),
+                postgres.getPassword(),
+                postgres.getJdbcUrl()
+        );
+
+        connectionPool = new ConnectionPoolImpl(postgres.getUsername(), postgres.getPassword(), postgres.getJdbcUrl());
+        fillPostgreDb();
+    }
+
+    @AfterAll
+    static void drop() {
+        postgres.stop();
     }
 
     @Test

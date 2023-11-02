@@ -21,6 +21,10 @@ public class RentalDaoImpl extends AbstractDao implements RentalDao {
         this.connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    public RentalDaoImpl(String user, String password, String databaseUrl) {
+        this.connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
+    }
+
     @Override
     public long create(Rental rental) throws DatabaseException {
         long id = getIdCounter();

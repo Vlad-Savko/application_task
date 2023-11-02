@@ -1,10 +1,15 @@
 package controller;
 
-import com.application_task.app.controllers.factory.WebControllerFactory;
+import com.application_task.app.db.connection.ConnectionPoolImpl;
 import com.application_task.app.util.Constants;
 import com.application_task.app.web.Server;
 import controller.client.WebClient;
+import controller.wrappers.AuthorControllerWrapper;
 import org.junit.jupiter.api.*;
+import service.DatabaseConnector;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.application_task.app.util.Constants.HttpMethod.*;
 import static org.junit.Assert.assertEquals;
@@ -12,22 +17,34 @@ import static org.junit.Assert.assertNull;
 
 @DisplayName("Test author controller")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AuthorControllerTest {
+public class AuthorControllerTest extends DatabaseConnector {
     private static Server server;
     private static WebClient webClient;
 
     @BeforeAll
-    static void init() {
+    static void init() throws SQLException, IOException {
+        postgres.start();
         server = new Server.Builder()
                 .port(8082)
-                .controller(Constants.OfServer.MOVIE_CONTROLLER_CONTEXT_PATH, WebControllerFactory.create(WebControllerFactory.Type.MOVIE))
-                .controller(Constants.OfServer.AUTHOR_CONTROLLER_CONTEXT_PATH, WebControllerFactory.create(WebControllerFactory.Type.AUTHOR))
+                .controller(
+                        Constants.OfServer.AUTHOR_CONTROLLER_CONTEXT_PATH,
+                        new AuthorControllerWrapper(
+                                postgres.getUsername(),
+                                postgres.getPassword(),
+                                postgres.getJdbcUrl()
+                        )
+                )
                 .build();
+        connectionPool = new ConnectionPoolImpl(postgres.getUsername(), postgres.getPassword(), postgres.getJdbcUrl());
+        fillPostgreDb();
+
         server.start();
     }
 
     @AfterAll
     static void drop() {
+        server.stop();
+        postgres.stop();
     }
 
     @Test

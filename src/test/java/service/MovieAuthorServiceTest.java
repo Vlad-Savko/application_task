@@ -1,5 +1,6 @@
 package service;
 
+import com.application_task.app.db.connection.ConnectionPoolImpl;
 import com.application_task.app.entity.Author;
 import com.application_task.app.entity.Movie;
 import com.application_task.app.entity.Rental;
@@ -10,10 +11,10 @@ import com.application_task.app.service.MovieService;
 import com.application_task.app.service.impl.AuthorServiceImpl;
 import com.application_task.app.service.impl.MovieAuthorServiceImpl;
 import com.application_task.app.service.impl.MovieServiceImpl;
-import com.application_task.app.util.Constants;
-import com.application_task.app.util.PropertiesLoader;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("MovieAuthor service + dao test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MovieAuthorServiceTest {
+public class MovieAuthorServiceTest extends DatabaseConnector {
     private static MovieAuthorService movieAuthorService;
     private static AuthorService authorService;
     private static List<Long> moviesIds;
@@ -30,15 +31,37 @@ public class MovieAuthorServiceTest {
     private static MovieService movieService;
 
     @BeforeAll
-    static void init() {
+    static void init() throws SQLException, IOException {
+        postgres.start();
         moviesIds = List.of(1L, 2L, 3L, 4L);
         authorsIds = List.of(5L, 6L, 7L, 8L);
-        String user = PropertiesLoader.getProperty(Constants.USER_PROPERTY_KEY),
-                password = PropertiesLoader.getProperty(Constants.PASSWORD_PROPERTY_KEY);
+        String username = postgres.getUsername();
+        String password = postgres.getPassword();
+        String databaseUrl = postgres.getJdbcUrl();
 
-        movieAuthorService = new MovieAuthorServiceImpl(user, password);
-        authorService = new AuthorServiceImpl(user, password);
-        movieService = new MovieServiceImpl(user, password);
+        movieAuthorService = new MovieAuthorServiceImpl(
+                username,
+                password,
+                databaseUrl
+        );
+        authorService = new AuthorServiceImpl(
+                username,
+                password,
+                databaseUrl
+        );
+        movieService = new MovieServiceImpl(
+                username,
+                password,
+                databaseUrl
+        );
+
+        connectionPool = new ConnectionPoolImpl(postgres.getUsername(), postgres.getPassword(), postgres.getJdbcUrl());
+        fillPostgreDb();
+    }
+
+    @AfterAll
+    static void drop() {
+        postgres.stop();
     }
 
     @Test
