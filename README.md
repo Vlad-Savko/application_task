@@ -39,7 +39,7 @@ After container is created and deployed, navigate to browser/Postman and start m
 ### Movies
 #### Get all movies
 
-```http
+```javascript
   GET http://localhost:8080/movies
 ```
 
@@ -70,7 +70,7 @@ After container is created and deployed, navigate to browser/Postman and start m
 
 #### Get one movie
 
-```http
+```javascript
   GET http://localhost:8080/movies/${id}
 ```
 
@@ -100,7 +100,7 @@ Returns a JSON-format of one movie by its id
 ###### **HTTP Response Code:** 200 (OK)
 #### Get movies filtered
 
-```http
+```javascript
   GET http://localhost:8080/movies/search?${filters}
 ```
 
@@ -134,7 +134,7 @@ Returns a JSON-format of movies which match the given filters separated by comma
  ###### **HTTP Response Code:** 200 (OK)
  #### Add a movie
 
-```http
+```javascript
   POST http://localhost:8080/movies
 ```
 
@@ -203,7 +203,7 @@ Returns a JSON-format of movies which match the given filters separated by comma
 ```
 ###### **HTTP Response Code:** 201 (Created)
  #### Delete a movie by JSON-body in request
-```http
+```javascript
   DELETE http://localhost:8080/movies
 ```
 
@@ -219,7 +219,7 @@ Returns a JSON-format of movies which match the given filters separated by comma
 ```
 ###### **HTTP Response Code:** 204 (No content)
 #### Delete a movie by request parameter
-```http
+```javascript
   DELETE http://localhost:8080/movies?id=${id}
 ```
 
@@ -230,7 +230,7 @@ Returns a JSON-format of movies which match the given filters separated by comma
 ###### **HTTP Response Code:** 204 (No content)
 
 #### Update a movie
-```http
+```javascript
   PUT http://localhost:8080/movies
 ```
 
@@ -290,7 +290,7 @@ Returns a JSON-format of movies which match the given filters separated by comma
 ### Authors
 #### Get all authors
 
-```http
+```javascript
   GET http://localhost:8080/authors
 ```
 
@@ -321,7 +321,7 @@ Returns a JSON-format of movies which match the given filters separated by comma
 
 #### Get one author
 
-```http
+```javascript
   GET http://localhost:8080/authors/${id}
 ```
 
@@ -351,7 +351,7 @@ Returns a JSON-format of one author by its id
 ###### **HTTP Response Code:** 200 (OK)
 #### Get authors filtered
 
-```http
+```javascript
   GET http://localhost:8080/authors/search?${filters}
 ```
 
@@ -386,7 +386,7 @@ Returns a JSON-format of authors which match the given filters separated by comm
  ###### **HTTP Response Code:** 200 (OK)
  #### Add an author
 
-```http
+```javascript
   POST http://localhost:8080/authors
 ```
 
@@ -456,7 +456,7 @@ Returns a JSON-format of authors which match the given filters separated by comm
 ```
 ###### **HTTP Response Code:** 201 (Created)
  #### Delete an author by JSON-body in request
-```http
+```javascript
   DELETE http://localhost:8080/authors
 ```
 
@@ -473,7 +473,7 @@ Returns a JSON-format of authors which match the given filters separated by comm
 **NOTE**: If author's movies don't have other authors, they'll also be deleted
 ###### **HTTP Response Code:** 204 (No content)
 #### Delete an author by request parameter
-```http
+```javascript
   DELETE http://localhost:8080/authors?id=${id}
 ```
 
