@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "b2d8d8af-d1a0-43f4-ad30-440a7a0c2636",
+		"name": "Application Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29918838"
+	},
+	"item": [
+		{
+			"name": "movies",
+			"item": [
+				{
+					"name": "Get all movies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one movie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies/101",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get movie filtered",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies/search?name='Test'",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "'Test'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a movie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Year of release\": 2002,\r\n    \"Authors\": [\r\n        {\r\n            \"firstName\": \"Dasha\",\r\n            \"lastName\": \"Malashenko\",\r\n            \"age\": 20,\r\n            \"Id\" : 1\r\n        }\r\n    ],\r\n    \"Rental finish date\": \"2003-09-04\",\r\n    \"Rental start date\": \"2003-11-02\",\r\n    \"Name\": \"aaaa\",\r\n    \"Id\" : 4\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a movie by JSON body",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\":100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a movie by request param - id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies?id=100",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a movie by JSON body",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Year of release\": 2011,\r\n    \"Authors\": [\r\n        {\r\n            \"firstName\": \"Darya\",\r\n            \"lastName\": \"Malashenko\",\r\n            \"age\": 20,\r\n            \"Id\" : 1\r\n        },\r\n        {\r\n            \"firstName\": \"Vladik\",\r\n            \"lastName\": \"Savko\",\r\n            \"age\": 20,\r\n            \"Id\" : 2\r\n        },\r\n        {\r\n            \"firstName\": \"Mikhail\",\r\n            \"lastName\": \"Grigorchuk\",\r\n            \"age\": 1,\r\n            \"Id\" : 4\r\n        }\r\n    ],\r\n    \"Id\" : 100,\r\n    \"Rental finish date\": \"2003-08-08\",\r\n    \"Rental start date\": \"2003-11-08\",\r\n    \"Name\": \"Avengers 2: Age of Ultron\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "authors",
+			"item": [
+				{
+					"name": "Get all authors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get authors by ids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authors/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get author filtered",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authors/search?movieId=a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors",
+								"search"
+							],
+							"query": [
+								{
+									"key": "movieId",
+									"value": "a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add an author",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"First name\": \"Ilya\",\r\n    \"Id\": 11,\r\n    \"Movies\": [\r\n        {\r\n            \"Year of release\": 2002,\r\n            \"Rental finish date\": \"2003-09-04\",\r\n            \"Id\": 123,\r\n            \"Rental start date\": \"2003-11-02\",\r\n            \"Name\": \"TOKS\"\r\n        },\r\n        {\r\n            \"Year of release\": 2002,\r\n            \"Rental finish date\": \"2003-09-04\",\r\n            \"Id\": 1234,\r\n            \"Rental start date\": \"2003-11-02\",\r\n            \"Name\": \"TOKS\"\r\n        }\r\n    ],\r\n    \"Last name\": \"Kozlov\",\r\n    \"Age\": 17\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an author by JSON body",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\":444\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an author by request parameter id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authors?id=11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an author by JSON body",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"First name\": \"Sasha\",\r\n    \"Id\": 2,\r\n    \"Movies\": [\r\n        {\r\n            \"Year of release\": 2002,\r\n            \"Rental finish date\": \"2003-11-11\",\r\n            \"Id\": 12345,\r\n            \"Rental start date\": \"2003-11-05\",\r\n            \"Name\": \"Viper\"\r\n        }\r\n    ],\r\n    \"Last name\": \"Yarmosh\",\r\n    \"Age\": 18\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
