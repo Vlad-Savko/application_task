@@ -485,7 +485,7 @@ Returns a JSON-format of authors which match the given filters separated by comm
 ###### **HTTP Response Code:** 204 (No content)
 
 #### Update an author
-```http
+```javascript
   PUT http://localhost:8080/authors
 ```
 
