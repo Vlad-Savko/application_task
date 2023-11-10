@@ -31,12 +31,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 public class MovieDaoImpl extends AbstractDao implements MovieDao {
     private final ConnectionPool connectionPool;
     private final RentalService rentalService;
     private final AuthorService authorService;
     private final MovieAuthorService movieAuthorService;
 
+    /**
+     * Constructs a {@link MovieDao} with the needed services that will use datasource with the URL from properties file
+     */
     public MovieDaoImpl(String user, String password) {
         this.rentalService = new RentalServiceImpl(user, password);
         this.authorService = new AuthorServiceImpl(user, password);
@@ -44,6 +50,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         this.connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    /**
+     * Constructs a {@link MovieDao} with the needed services that will use datasource with the provided credentials
+     */
     public MovieDaoImpl(String user, String password, String databaseUrl) {
         this.rentalService = new RentalServiceImpl(user, password, databaseUrl);
         this.authorService = new AuthorServiceImpl(user, password, databaseUrl);
@@ -51,6 +60,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         this.connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void create(Movie movie) throws DatabaseException {
         if (this.get(movie.id()).isEmpty()) {
@@ -72,6 +84,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long create(MovieDto movie) throws DatabaseException {
         if (this.get(movie.id()).isEmpty()) {
@@ -81,6 +96,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         return -1L;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Movie> get(long id) throws DatabaseException {
         String sqlCommandForGettingMovie = Constants.Sql.Movie.SELECT_ONE.formatted("ID", String.valueOf(id));
@@ -135,6 +153,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Movie> getAll() throws DatabaseException {
         List<Movie> movies;
@@ -156,6 +177,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Movie movie) throws DatabaseException {
         long movieId = movie.id();
@@ -221,7 +245,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("all")
     public Optional<Movie> delete(long id) throws DatabaseException {
@@ -254,6 +280,9 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         return movie;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("all")
     public List<Movie> getWithFilters(Map<String, String> filters) throws WrongRequestParamException, DatabaseException {
@@ -307,7 +336,16 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         }
     }
 
-
+    /**
+     * Creates movie in the database
+     *
+     * @param rental             {@link Rental} of related movie
+     * @param movieId            id of movie to set in the database
+     * @param movieName          {@link String} with the value of movie name
+     * @param movieYearOfRelease movie year of release
+     * @throws DatabaseException if database error occurs
+     * @see DatabaseException
+     */
     private void createMovie(Rental rental, Long movieId, String movieName, int movieYearOfRelease) throws DatabaseException {
         long rentalId = rentalService.create(rental);
         String sqlCommand = Constants.Sql.Movie.INSERT.formatted(movieId, movieName, movieYearOfRelease, rentalId);
@@ -334,6 +372,17 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         );
     }
 
+    /**
+     * Retrieves filtered movies from the database
+     *
+     * @param connection                         connection to the database
+     * @param sqlCommandForGettingMoviesFiltered {@link String} which has the value of SQL command for selecting filtered movies
+     * @param sqlCommandForGettingAuthors        {@link String} which has the value of SQL command for selecting movie related authors
+     * @param sqlCommandForGettingMovieRental    {@link String} which has the value of SQL command for selecting movie related rental
+     * @return {@link List} of filtered movies
+     * @throws SQLException if database error occurs
+     * @see SQLException
+     */
     @NotNull
     private List<Movie> getMoviesList(
             Connection connection,
@@ -383,6 +432,12 @@ public class MovieDaoImpl extends AbstractDao implements MovieDao {
         return ParamValidator.checkMovieParams(filters);
     }
 
+    /**
+     * Builds a string for SQL SELECT with filters
+     *
+     * @param filters {@link Map} of filters to add to string
+     * @return {@link String} which has the value of SQL command for selecting movies with filters
+     */
     private static String getSqlCommandForFiltering(Map<String, String> filters) {
         StringBuilder sqlCommand = new StringBuilder(Constants.Sql.Movie.SELECT);
         filters.forEach((key, value) -> {

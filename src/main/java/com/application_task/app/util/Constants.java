@@ -1,5 +1,8 @@
 package com.application_task.app.util;
 
+/**
+ * Represents general constants and constants for server, SQL, entities, HTTP, database
+ */
 public final class Constants {
     public static final String CREATE_CONSTANT_CLASS_ERROR = "Constant class can not be created.";
 

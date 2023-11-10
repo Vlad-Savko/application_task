@@ -26,23 +26,35 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 public class AuthorDaoImpl implements AuthorDao {
     private final ConnectionPool connectionPool;
     private final MovieDaoImplHelper helper;
     private final MovieAuthorService movieAuthorService;
 
+    /**
+     * Constructs an {@link AuthorDao} with the needed services that will use datasource with the URL from properties file
+     */
     public AuthorDaoImpl(String user, String password) {
         helper = new MovieDaoImplHelper(user, password);
         movieAuthorService = new MovieAuthorServiceImpl(user, password);
         connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    /**
+     * Constructs an {@link AuthorDao} with the needed services that will use datasource with the provided credentials
+     */
     public AuthorDaoImpl(String user, String password, String databaseUrl) {
         helper = new MovieDaoImplHelper(user, password, databaseUrl);
         movieAuthorService = new MovieAuthorServiceImpl(user, password, databaseUrl);
         connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long create(Author author) throws DatabaseException {
         String sqlCommandForGettingAuthor = Constants.Sql.Author.GET_AUTHOR.formatted(author.id());
@@ -76,6 +88,9 @@ public class AuthorDaoImpl implements AuthorDao {
         return author.id();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Author> get(long id) throws DatabaseException {
 
@@ -100,6 +115,9 @@ public class AuthorDaoImpl implements AuthorDao {
         return Optional.ofNullable(author);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AuthorDto> getAsDto(long id) throws DatabaseException {
         AuthorDto author;
@@ -132,6 +150,9 @@ public class AuthorDaoImpl implements AuthorDao {
         return Optional.ofNullable(author);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<AuthorDto> getWithFilters(Map<String, String> filters) throws WrongRequestParamException, DatabaseException {
         if (filters.isEmpty()) {
@@ -171,6 +192,16 @@ public class AuthorDaoImpl implements AuthorDao {
         }
     }
 
+    /**
+     * Retrieves filtered authors from the database if such exist
+     *
+     * @param connection                   connection to the database
+     * @param sqlCommandForFilteringMovies {@link String} which has the value of SQL command for retrieving needed authors
+     * @param authors                      {@link List} of authors to fill with
+     * @return {@code List} of filtered authors as dtos
+     * @throws SQLException if database error occurs
+     * @see SQLException
+     */
     @NotNull
     @SuppressWarnings("all")
     private List<AuthorDto> getFilteredAuthorDtos(Connection connection, String sqlCommandForFilteringMovies, List<AuthorDto> authors) throws SQLException {
@@ -189,6 +220,15 @@ public class AuthorDaoImpl implements AuthorDao {
         return authors;
     }
 
+    /**
+     * Retrieves authors from the database if such exist
+     *
+     * @param authorsResultSet {@link ResultSet} of authors to fill with related movies
+     * @param connection       connection to the database
+     * @return {@code List} of authors as dtos
+     * @throws SQLException if database error occurs
+     * @see SQLException
+     */
     @NotNull
     private List<AuthorDto> getAuthorDtos(ResultSet authorsResultSet, Connection connection) throws SQLException {
         List<MovieDto> movies;
@@ -216,6 +256,9 @@ public class AuthorDaoImpl implements AuthorDao {
         return ParamValidator.checkAuthorParams(filters);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<AuthorDto> getAll() throws DatabaseException {
         List<AuthorDto> authors;
@@ -233,6 +276,9 @@ public class AuthorDaoImpl implements AuthorDao {
         return authors;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Author author) throws DatabaseException {
 
@@ -255,6 +301,9 @@ public class AuthorDaoImpl implements AuthorDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(AuthorDto authorDto) throws DatabaseException {
         Optional<AuthorDto> authorToUpdate = this.getAsDto(authorDto.id());
@@ -299,6 +348,9 @@ public class AuthorDaoImpl implements AuthorDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AuthorDto> delete(long id) throws DatabaseException {
         Optional<AuthorDto> author = this.getAsDto(id);
@@ -333,6 +385,15 @@ public class AuthorDaoImpl implements AuthorDao {
         return author;
     }
 
+    /**
+     * Retrieves movies from the database if such exist
+     *
+     * @param moviesResultSet {@link ResultSet} of movies
+     * @param connection      connection to the database
+     * @param movies          {@link List} of movies as dtos to fill with rental
+     * @throws SQLException if database error occurs
+     * @see SQLException
+     */
     private void getMoviesDtos(ResultSet moviesResultSet, Connection connection, List<MovieDto> movies) throws SQLException {
         while (moviesResultSet.next()) {
             String sqlCommandForGettingMovieRental = Constants.Sql.Rental.GET_RENTAL_FOR_MOVIE.formatted(moviesResultSet.getLong(4));
@@ -353,6 +414,14 @@ public class AuthorDaoImpl implements AuthorDao {
         }
     }
 
+    /**
+     * Checks if movie has only one author
+     *
+     * @param movieId id of movie to check
+     * @return {@code true} if the movie has only one author
+     * @throws DatabaseException if database error occurs
+     * @see DatabaseException
+     */
     private boolean checkOneAuthor(Long movieId) throws DatabaseException {
         try (Connection connection = connectionPool.getConnection()) {
             String sqlCommandForGettingNumberOfAuthors = Constants.Sql.Author.GET_NUMBER_OF_AUTHORS.formatted(movieId);
@@ -372,6 +441,12 @@ public class AuthorDaoImpl implements AuthorDao {
 
     }
 
+    /**
+     * Builds a string for SQL SELECT with filters
+     *
+     * @param filters {@link Map} of filters to add to string
+     * @return {@link String} which has the value of SQL command for selecting authors with filters
+     */
     private static String getSqlCommandForFiltering(Map<String, String> filters) {
         StringBuilder sqlCommand = new StringBuilder(Constants.Sql.Author.SELECT);
         filters.forEach((key, value) -> {

@@ -20,19 +20,35 @@ import java.util.stream.Stream;
 import static com.application_task.app.util.Constants.HttpMethod.*;
 import static com.application_task.app.util.StringParser.parseMovieFilters;
 
+/**
+ * {@inheritDoc}
+ */
 public class MovieController extends WebController {
     private final MovieService movieService;
 
+    /**
+     * Constructs an {@link MovieController} with the services that will use datasource with the properties from properties file
+     */
     public MovieController() {
         String user = PropertiesLoader.getProperty(Constants.USER_PROPERTY_KEY);
         String password = PropertiesLoader.getProperty(Constants.PASSWORD_PROPERTY_KEY);
         this.movieService = new MovieServiceImpl(user, password);
     }
 
+    /**
+     * Constructs an {@link MovieController} with the services that will use given properties for datasource
+     *
+     * @param user        a username datasource property
+     * @param password    a password datasource property
+     * @param databaseUrl a database url datasource property
+     */
     public MovieController(String user, String password, String databaseUrl) {
         this.movieService = new MovieServiceImpl(user, password, databaseUrl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(HttpExchange httpExchange) {
         String request = httpExchange.getRequestURI().getPath();
@@ -210,6 +226,14 @@ public class MovieController extends WebController {
         }
     }
 
+    /**
+     * Writes error response
+     *
+     * @param httpExchange an http exchange.
+     * @param movies       a stream of movies to send as JSON.
+     * @param status       an http response status code to send.
+     * @throws IOException if there's an i/o error with {@link HttpExchange}
+     */
     private void writeResponse(HttpExchange httpExchange, Stream<Movie> movies, int status) throws IOException {
         writeResponse(httpExchange,
                 movies
@@ -218,7 +242,9 @@ public class MovieController extends WebController {
                 status);
     }
 
-
+    /**
+     * Deletes a movie from database and sends response
+     */
     private void deleteMovie(HttpExchange httpExchange, long movieId) {
         if (movieId > 0) {
             try {

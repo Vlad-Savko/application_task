@@ -12,19 +12,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * {@inheritDoc}
+ */
 public class RentalDaoImpl extends AbstractDao implements RentalDao {
     private final ConnectionPool connectionPool;
 
     private static final ThreadLocal<Long> idCounter = ThreadLocal.withInitial(() -> 100L);
 
+    /**
+     * Constructs a {@link RentalDao} with the needed services that will use datasource with the URL from properties file
+     */
     public RentalDaoImpl(String user, String password) {
         this.connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    /**
+     * Constructs a {@link RentalDao} with the needed services that will use datasource with the provided credentials
+     */
     public RentalDaoImpl(String user, String password, String databaseUrl) {
         this.connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long create(Rental rental) throws DatabaseException {
         long id = getIdCounter();
@@ -43,6 +55,9 @@ public class RentalDaoImpl extends AbstractDao implements RentalDao {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Rental rental, long movieId) throws DatabaseException {
 

@@ -20,19 +20,23 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.application_task.app.util.Constants.HttpMethod.*;
 import static com.application_task.app.util.StringParser.parseMovieFilters;
 
+/**
+ * {@inheritDoc}
+ */
 public class AuthorController extends WebController {
     protected final AuthorService authorService;
     protected final MovieService movieService;
     protected final MovieAuthorService movieAuthorService;
 
+    /**
+     * Constructs an {@link AuthorController} with the services that will use datasource with the properties from properties file
+     */
     public AuthorController() {
         String user = PropertiesLoader.getProperty(Constants.USER_PROPERTY_KEY);
         String password = PropertiesLoader.getProperty(Constants.PASSWORD_PROPERTY_KEY);
@@ -41,12 +45,22 @@ public class AuthorController extends WebController {
         movieService = new MovieServiceImpl(user, password);
     }
 
+    /**
+     * Constructs an {@link AuthorController} with the services that will use given properties for datasource
+     *
+     * @param user        a username datasource property
+     * @param password    a password datasource property
+     * @param databaseUrl a database url datasource property
+     */
     public AuthorController(String user, String password, String databaseUrl) {
         authorService = new AuthorServiceImpl(user, password, databaseUrl);
         movieAuthorService = new MovieAuthorServiceImpl(user, password, databaseUrl);
         movieService = new MovieServiceImpl(user, password, databaseUrl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(HttpExchange httpExchange) {
         String request = httpExchange.getRequestURI().getPath();
@@ -227,6 +241,14 @@ public class AuthorController extends WebController {
         }
     }
 
+    /**
+     * Writes error response
+     *
+     * @param httpExchange an http exchange.
+     * @param authors      a stream of authors to send as JSON.
+     * @param status       an http response status code to send.
+     * @throws IOException if there's an i/o error with {@link HttpExchange}
+     */
     private void writeResponse(HttpExchange httpExchange, Stream<AuthorDto> authors, int status) throws IOException {
         writeResponse(httpExchange,
                 authors
@@ -235,6 +257,9 @@ public class AuthorController extends WebController {
                 status);
     }
 
+    /**
+     * Deletes an author from database and sends response
+     */
     private void deleteAuthor(HttpExchange httpExchange, long id) {
         if (id > 0) {
             try {

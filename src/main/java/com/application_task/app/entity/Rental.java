@@ -3,6 +3,9 @@ package com.application_task.app.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Represents a rental entity
+ */
 public record Rental(LocalDate start, LocalDate finish) {
     @Override
     public boolean equals(Object o) {

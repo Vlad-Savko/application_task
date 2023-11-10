@@ -12,7 +12,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Represents a mapper, which maps objects to/from JSON
+ */
 public class Mapper {
+
+    /**
+     * Parses id from {@link HttpExchange} JSON response body
+     *
+     * @param httpExchange {@link HttpExchange} to parse id from
+     * @return {@code id} or {@code -1} if an error occurs
+     */
     protected static long idFromJson(final HttpExchange httpExchange) {
         long id = -1;
         try (InputStream requestBody = httpExchange.getRequestBody();
@@ -28,6 +38,12 @@ public class Mapper {
         return id;
     }
 
+    /**
+     * Converts JSON element to long value
+     *
+     * @param jsonElement {@link JsonElement} to convert
+     * @return {@code long value}
+     */
     private static long convertJsonToLong(JsonElement jsonElement) {
         com.google.gson.JsonObject data = jsonElement.getAsJsonObject();
         return data.get("Id").getAsLong();

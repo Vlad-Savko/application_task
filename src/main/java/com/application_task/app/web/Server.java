@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * {@inheritDoc}
+ *
+ * @implSpec creates few contexts for given controllers, implements Builder creational pattern
+ */
 public class Server implements WebServer {
     private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
     private final Map<String, Handler> controllers;
@@ -18,6 +23,11 @@ public class Server implements WebServer {
 
     private HttpServer httpServer;
 
+    /**
+     * Constructs a {@link WebServer} with the controllers and their related contexts provided by {@code builder}
+     *
+     * @param builder {@link Builder} of this object
+     */
     public Server(Builder builder) {
         this.controllers = new HashMap<>();
         if (builder.controllers != null) {
@@ -27,6 +37,9 @@ public class Server implements WebServer {
         this.port = builder.port;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() {
         try {
@@ -43,12 +56,18 @@ public class Server implements WebServer {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
         this.httpServer.stop(4);
         LOGGER.log(Level.INFO, Constants.OfServer.SERVER_STOPPED);
     }
 
+    /**
+     * Builder of {@link Server} which is the implementation of Builder creational pattern
+     */
     public final static class Builder {
         private int port;
         private Map<String, Handler> controllers;
@@ -69,6 +88,5 @@ public class Server implements WebServer {
         public Server build() {
             return new Server(this);
         }
-
     }
 }

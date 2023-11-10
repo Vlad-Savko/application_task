@@ -11,9 +11,27 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * Represents an abstract controller, which has methods for processing {@link HttpExchange}:<br/>
+ * - execute CRUD methods using the information from HTTP request<br/>
+ * - send HTTP response
+ */
 public abstract class WebController {
+    /**
+     * Processes {@link HttpExchange} and sends response
+     *
+     * @param httpExchange an http exchange.
+     */
     abstract public void execute(final HttpExchange httpExchange);
 
+    /**
+     * Writes response to {@link HttpExchange}'s response body
+     *
+     * @param httpExchange an http exchange.
+     * @param jsonObjects  a list of JSON-objects to write to response.
+     * @param status       an http response status code to send.
+     * @throws IOException if there's an i/o error with {@link HttpExchange}
+     */
     protected void writeResponse(final HttpExchange httpExchange, List<JsonObject> jsonObjects, int status) throws IOException {
         Headers responseHeaders = httpExchange.getResponseHeaders();
         StringBuilder db = new StringBuilder();
@@ -28,6 +46,14 @@ public abstract class WebController {
         }
     }
 
+    /**
+     * Sends response headers to http response
+     *
+     * @param httpExchange   an http exchange.
+     * @param status         an http response status code to send.
+     * @param responseLength a response length.
+     * @see <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.httpserver/com/sun/net/httpserver/HttpExchange.html#sendResponseHeaders(int,long)"/>sendResponseHeaders
+     */
     private void response(final HttpExchange httpExchange, final int status, final int responseLength) {
         try {
             httpExchange.sendResponseHeaders(status, responseLength);
@@ -36,6 +62,14 @@ public abstract class WebController {
         }
     }
 
+    /**
+     * Writes error response
+     *
+     * @param httpExchange an http exchange.
+     * @param message      a message to send as error message.
+     * @param status       an http response status code to send.
+     * @throws IOException if there's an i/o error with {@link HttpExchange}
+     */
     protected void writeErrorResponse(final HttpExchange httpExchange, String message, int status) throws IOException {
         byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
         response(httpExchange, status, messageBytes.length);
@@ -45,6 +79,13 @@ public abstract class WebController {
         }
     }
 
+    /**
+     * Writes error response
+     *
+     * @param httpExchange an http exchange.
+     * @param ex           a message to send as error message.
+     * @param status       an http response status code to send.
+     */
     protected void errorResponse(HttpExchange httpExchange, String ex, int status) {
         try {
             writeErrorResponse(httpExchange, ex, status);

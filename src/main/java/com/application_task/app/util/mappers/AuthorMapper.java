@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ */
 public class AuthorMapper extends Mapper {
     private final static String ID = "Id";
     private final static String FIRST_NAME = "First name";
@@ -30,6 +33,12 @@ public class AuthorMapper extends Mapper {
     private final static String MOVIES = "Movies";
     private final static String AGE = "Age";
 
+    /**
+     * Converts author dto object to JSON format
+     *
+     * @param author {@link AuthorDto} to convert to JSON format
+     * @return {@link JsonObject} representation of the given author
+     */
     public static JsonObject toJson(AuthorDto author) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(ID, author.id());
@@ -43,6 +52,12 @@ public class AuthorMapper extends Mapper {
         return jsonObject;
     }
 
+    /**
+     * Parses author dto object from the given {@link HttpExchange}
+     *
+     * @param httpExchange {@link HttpExchange} to parse author dto object from
+     * @return {@link Optional} of parsed author dto (empty optional if any error occurs)
+     */
     public static Optional<AuthorDto> fromJson(final HttpExchange httpExchange) {
         AuthorDto author = null;
         try (InputStream requestBody = httpExchange.getRequestBody();
@@ -56,6 +71,13 @@ public class AuthorMapper extends Mapper {
         return Optional.ofNullable(author);
     }
 
+    /**
+     * Converts JSON element to author dto
+     *
+     * @param jsonElement {@link JsonElement} to convert to author dto
+     * @return {@link AuthorDto} of the given JSON element
+     * @throws IOException if there's an i/o error with {@code jsonElement}
+     */
     private static AuthorDto convertJsonToAuthor(final JsonElement jsonElement) throws IOException {
         List<MovieDto> movies = new ArrayList<>();
 
@@ -100,6 +122,9 @@ public class AuthorMapper extends Mapper {
                 movies);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static long idFromJson(final HttpExchange httpExchange) {
         return Mapper.idFromJson(httpExchange);
     }

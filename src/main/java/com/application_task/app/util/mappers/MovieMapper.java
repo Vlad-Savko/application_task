@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ */
 public class MovieMapper extends Mapper {
     private final static String ID = "Id";
     private final static String NAME = "Name";
@@ -30,6 +33,12 @@ public class MovieMapper extends Mapper {
     private static final String RENTAL_START_DATE = "Rental start date";
     private static final String RENTAL_FINISH_DATE = "Rental finish date";
 
+    /**
+     * Converts movie object to JSON format
+     *
+     * @param movie {@link Movie} to convert to JSON format
+     * @return {@link JsonObject} representation of the given movie
+     */
     public static JsonObject toJson(Movie movie) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.put(ID, movie.id());
@@ -53,6 +62,12 @@ public class MovieMapper extends Mapper {
         return jsonObject;
     }
 
+    /**
+     * Parses movie object from the given {@link HttpExchange}
+     *
+     * @param httpExchange {@link HttpExchange} to parse movie object from
+     * @return {@link Optional} of parsed movie (empty optional if any error occurs)
+     */
     public static Optional<Movie> fromJson(final HttpExchange httpExchange) {
         Movie movie = null;
         try (InputStream requestBody = httpExchange.getRequestBody();
@@ -69,6 +84,12 @@ public class MovieMapper extends Mapper {
         return Optional.ofNullable(movie);
     }
 
+    /**
+     * Converts JSON element to movie
+     *
+     * @param jsonElement {@link JsonElement} to convert to movie
+     * @return {@link Movie} of the given JSON element
+     */
     private static Movie convertJsonToMovie(final JsonElement jsonElement) {
         com.google.gson.JsonObject data = jsonElement.getAsJsonObject();
         try {
@@ -107,6 +128,9 @@ public class MovieMapper extends Mapper {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static long idFromJson(final HttpExchange httpExchange) {
         return Mapper.idFromJson(httpExchange);
     }

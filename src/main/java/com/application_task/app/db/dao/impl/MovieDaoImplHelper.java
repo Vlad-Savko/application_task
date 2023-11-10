@@ -17,21 +17,37 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Represents a helper class for movie dao
+ */
 public class MovieDaoImplHelper extends AbstractDao {
     private final ConnectionPool connectionPool;
     private final RentalService rentalService;
 
-
+    /**
+     * Constructs a {@link MovieDaoImplHelper} with the needed services that will use datasource with the URL from properties file
+     */
     public MovieDaoImplHelper(String user, String password) {
         this.rentalService = new RentalServiceImpl(user, password);
         this.connectionPool = new ConnectionPoolImpl(user, password);
     }
 
+    /**
+     * Constructs a {@link MovieDaoImplHelper} with the needed services that will use datasource with the provided credentials
+     */
     public MovieDaoImplHelper(String user, String password, String databaseUrl) {
         this.rentalService = new RentalServiceImpl(user, password, databaseUrl);
         this.connectionPool = new ConnectionPoolImpl(user, password, databaseUrl);
     }
 
+    /**
+     * Deletes a movie by its id
+     *
+     * @param id id of movie to delete
+     * @throws DatabaseException if database error occurs
+     * @see MovieDaoImpl
+     * @see DatabaseException
+     */
     @SuppressWarnings("all")
     public void deleteMovie(long id) throws DatabaseException {
 
@@ -54,6 +70,15 @@ public class MovieDaoImplHelper extends AbstractDao {
         }
     }
 
+    /**
+     * Creates a movie in the database
+     *
+     * @param movie movie to create in the database
+     * @return {@code id} of new created movie or {@code -1} if such movie exists
+     * @throws DatabaseException if database error occurs
+     * @see MovieDaoImpl
+     * @see DatabaseException
+     */
     public long createMovie(MovieDto movie) throws DatabaseException {
         if (this.get(movie.id()).isEmpty()) {
             long rentalId = rentalService.create(movie.rental());
@@ -74,6 +99,15 @@ public class MovieDaoImplHelper extends AbstractDao {
         return -1L;
     }
 
+    /**
+     * Retrieves the movie from the database by its id if such exists
+     *
+     * @param id id of movie to retrieve
+     * @return {@link Optional} of movie if such exists (empty optional if no such movie in the database)
+     * @throws DatabaseException if database error occurs
+     * @see MovieDaoImpl
+     * @see DatabaseException
+     */
     private Optional<MovieDto> get(Long id) throws DatabaseException {
         String sqlCommandForGettingMovie = Constants.Sql.Movie.SELECT_ONE.formatted("ID", String.valueOf(id));
         String sqlCommandForGettingMovieRental = Constants.Sql.Rental.GET_RENTAL_FOR_MOVIE;
@@ -109,6 +143,14 @@ public class MovieDaoImplHelper extends AbstractDao {
         return Optional.ofNullable(movie);
     }
 
+    /**
+     * Updates the movie in the database if such exists
+     *
+     * @param movie movie to update in the database
+     * @throws DatabaseException if database error occurs
+     * @see MovieDaoImpl
+     * @see DatabaseException
+     */
     public void updateMovie(MovieDto movie) throws DatabaseException {
         rentalService.update(movie.rental(), movie.id());
         String sqlCommand = Constants.Sql.Movie.UPDATE.formatted(movie.name(), movie.yearOfRelease(), movie.id());

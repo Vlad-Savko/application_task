@@ -2,6 +2,9 @@ package com.application_task.app.entity;
 
 import java.util.Objects;
 
+/**
+ * Represents an author entity
+ */
 public record Author(Long id, String firstName, String lastName, int age) {
     @Override
     public boolean equals(Object o) {
