@@ -10,8 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -47,24 +45,20 @@ public class MovieMapperTest {
 
     @Test
     @DisplayName("Test converting JSON to movie")
-    void testConvertingJsonToMovie() throws FileNotFoundException {
+    void testConvertingJsonToMovie() {
         when(httpExchange.getRequestBody())
                 .thenReturn(
-                        new FileInputStream(
-                                "C:\\Users\\VladislavSavko\\javaProjects\\application_task\\src\\test\\java\\other\\mappers\\testFiles\\testMovie"
-                        )
+                        MovieMapperTest.class.getResourceAsStream("/testFiles/testMovie")
                 );
         assertTrue(MovieMapper.fromJson(httpExchange).isPresent());
     }
 
     @Test
     @DisplayName("Test converting invalid JSON to movie")
-    void testConvertingInvalidJsonToMovie() throws FileNotFoundException {
+    void testConvertingInvalidJsonToMovie() {
         when(httpExchange.getRequestBody())
                 .thenReturn(
-                        new FileInputStream(
-                                "C:\\Users\\VladislavSavko\\javaProjects\\application_task\\src\\test\\java\\other\\mappers\\testFiles\\testWrongMovie"
-                        )
+                        MovieMapperTest.class.getResourceAsStream("/testFiles/testWrongMovie")
                 );
         assertTrue(MovieMapper.fromJson(httpExchange).isEmpty());
     }

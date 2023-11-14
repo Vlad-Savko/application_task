@@ -9,8 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,24 +35,20 @@ public class AuthorMapperTest {
 
     @Test
     @DisplayName("Test converting JSON to author")
-    void testConvertingJsonToAuthor() throws FileNotFoundException {
+    void testConvertingJsonToAuthor() {
         when(httpExchange.getRequestBody())
                 .thenReturn(
-                        new FileInputStream(
-                                "C:\\Users\\VladislavSavko\\javaProjects\\application_task\\src\\test\\java\\other\\mappers\\testFiles\\testAuthor"
-                        )
+                        AuthorMapperTest.class.getResourceAsStream("/testFiles/testAuthor")
                 );
         assertTrue(AuthorMapper.fromJson(httpExchange).isPresent());
     }
 
     @Test
     @DisplayName("Test converting invalid JSON to author")
-    void testConvertingInvalidJsonToAuthor() throws FileNotFoundException {
+    void testConvertingInvalidJsonToAuthor() {
         when(httpExchange.getRequestBody())
                 .thenReturn(
-                        new FileInputStream(
-                                "C:\\Users\\VladislavSavko\\javaProjects\\application_task\\src\\test\\java\\other\\mappers\\testFiles\\testWrongAuthor"
-                        )
+                        AuthorMapperTest.class.getResourceAsStream("/testFiles/testWrongAuthor")
                 );
         assertTrue(AuthorMapper.fromJson(httpExchange).isEmpty());
     }

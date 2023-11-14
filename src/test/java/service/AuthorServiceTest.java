@@ -82,7 +82,7 @@ public class AuthorServiceTest extends DatabaseConnector {
     @DisplayName("Get all authors")
     @Order(5)
     void getAllExistingMoviesTest() throws DatabaseException {
-        Mockito.doReturn(Collections.singletonList("other/mappers/testFiles/testAuthor")).when(authorDao).getAll();
+        Mockito.doReturn(Collections.singletonList("testFiles/testAuthor")).when(authorDao).getAll();
         assertEquals(1, authorService.getAll().size());
     }
 

@@ -83,7 +83,7 @@ public class MovieServiceTest extends DatabaseConnector {
     @DisplayName("Get all movies")
     @Order(5)
     void getAllExistingMoviesTest() throws DatabaseException {
-        Mockito.doReturn(Collections.singletonList("other/mappers/testFiles/testAuthor")).when(movieDao).getAll();
+        Mockito.doReturn(Collections.singletonList("testFiles/testAuthor")).when(movieDao).getAll();
         assertEquals(1, movieService.getAll().size());
     }
 
@@ -96,7 +96,7 @@ public class MovieServiceTest extends DatabaseConnector {
                 "Name",
                 2011,
                 Collections.singletonList(
-                        new Author(11L, "other/mappers/testFiles/testAuthor", "other/mappers/testFiles/testAuthor", 100)),
+                        new Author(11L, "testFiles/testAuthor", "testFiles/testAuthor", 100)),
                 new Rental(LocalDate.now(), LocalDate.of(2003, Month.APRIL, 10)));
         movieService.update(movie);
         assertEquals(2011, movieService.get(123L).get().yearOfRelease());

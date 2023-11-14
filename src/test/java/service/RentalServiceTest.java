@@ -72,7 +72,7 @@ public class RentalServiceTest extends DatabaseConnector {
         );
         Movie movie = new Movie(
                 1L,
-                "other/mappers/testFiles/testAuthor",
+                "testFiles/testAuthor",
                 1996,
                 Collections.emptyList(),
                 rental
